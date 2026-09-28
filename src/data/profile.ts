@@ -15,7 +15,7 @@ export const profile = {
 // Replace null with a quoted URL, e.g. 'https://github.com/your-username'.
 // Unconfigured links are disabled so visitors never land on a fake profile.
 export const links: ProfileLink[] = [
-  { label: 'Portfolio', caption: 'Selected work & projects', href: '/Portfolio-Site/portfolio/' },
+  { label: 'Portfolio', caption: 'Selected work & projects',  href: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/projects/` },
   { label: 'Linkedin', caption: 'Let’s connect professionally', href: 'https://www.linkedin.com/in/krisjanndelgado/' },
   { label: 'Github', caption: 'Code & experiments', href: 'https://github.com/Ciridi' },
   { label: 'Instagram', caption: 'Instagram Art Account', href: 'https://www.instagram.com/thundersqueaks/' },
