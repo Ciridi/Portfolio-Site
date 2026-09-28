@@ -1,0 +1,32 @@
+---
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import HeroArt from '../../components/portfolio/HeroArt.astro';
+import ProjectList from '../../components/portfolio/ProjectList.astro';
+import { profile } from '../../data/profile';
+import { portfolio } from '../../data/portfolio';
+import { publishedProjects } from '../../lib/portfolio';
+const projects = await publishedProjects();
+const current = projects.filter(({ data }) => data.status === 'current');
+const past = projects.filter(({ data }) => data.status === 'past');
+---
+<PortfolioLayout title="Projects" description={`${profile.name} — about me, current projects, and past work.`}>
+  <section class="about section" id="about" aria-labelledby="about-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="section-number">01</span> ABOUT ME <span class="line"></span></p>
+      <h1 id="about-title">{portfolio.headline}<br /><span class="muted">{portfolio.subheadline}</span><span class="orange">*</span></h1>
+      <p class="intro">Hi, I’m <strong>{profile.name}.</strong></p>
+      <p class="bio">{portfolio.about}</p>
+      <ul class="interests" aria-label="Areas of interest">{portfolio.interests.map((interest) => <li>{interest}</li>)}</ul>
+      <a class="primary-link" href="#current">Explore my work <span aria-hidden="true">↗</span></a>
+    </div>
+    <HeroArt />
+  </section>
+  <section class="section projects-section" id="current" aria-labelledby="current-title">
+    <div class="section-heading"><div><p class="eyebrow"><span class="section-number">02</span> IN THE MAKING</p><h2 id="current-title">Current projects<span class="orange">.</span></h2></div><p>Ideas in motion.<br />A closer look at what I’m building.</p></div>
+    <ProjectList projects={current} />
+  </section>
+  <section class="section past-section" id="past" aria-labelledby="past-title">
+    <div class="section-heading"><div><p class="eyebrow"><span class="section-number">03</span> THE ARCHIVE</p><h2 id="past-title">Past projects<span class="orange">.</span></h2></div><p>Finished work.<br />The process, the outcome, and what comes next.</p></div>
+    <ProjectList projects={past} compact />
+  </section>
+</PortfolioLayout>

@@ -1,0 +1,9 @@
+---
+import { profile } from '../../data/profile';
+import { withBase } from '../../lib/portfolio';
+---
+<footer class="site-footer">
+  <div><span class="footer-spark" aria-hidden="true">✳</span><p>Still curious.<br /><strong>Always building.</strong></p></div>
+  <a href={withBase()}>Back to my links <span aria-hidden="true">↗</span></a>
+  <span class="footer-note">{profile.name} / PORTFOLIO</span>
+</footer>

@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { projectPath } from '../../lib/portfolio';
+interface Props { project: CollectionEntry<'projects'>; compact?: boolean; }
+const { project, compact = false } = Astro.props;
+const { data, id } = project;
+---
+<article class:list={['content-project', { compact }]}>
+  <a class="project-card-link" href={projectPath(id)}>
+    <div class="project-cover">
+      {data.image ? (
+        <Image src={data.image} alt={data.imageAlt} widths={data.image.format === 'svg' ? undefined : [480, 800, 1200]} sizes={compact ? '(max-width: 660px) 90vw, 220px' : '(max-width: 660px) 90vw, 45vw'} loading="lazy" decoding="async" />
+      ) : (
+        <div class="cover-fallback" aria-hidden="true"><span class="fallback-orbit"></span><span class="fallback-square"></span></div>
+      )}
+    </div>
+    <div class="project-card-copy">
+      <div class="card-topline"><span>{data.category} / {data.year}</span>{data.sample && <span class="sample-label">EXAMPLE</span>}</div>
+      <h3>{data.title}</h3>
+      <p>{data.description}</p>
+      {data.technologies.length > 0 && <ul class="tags" aria-label="Technologies">{data.technologies.map((technology) => <li>{technology}</li>)}</ul>}
+      <div class="card-bottomline"><span class="card-status"><span></span>{data.status === 'current' ? 'IN PROGRESS' : 'COMPLETED'}{data.featured && ' / FEATURED'}</span><span class="view-project">View project <span aria-hidden="true">↗</span></span></div>
+    </div>
+  </a>
+</article>

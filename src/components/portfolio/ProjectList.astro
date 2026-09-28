@@ -1,0 +1,11 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import ProjectCard from './ProjectCard.astro';
+interface Props { projects: CollectionEntry<'projects'>[]; compact?: boolean; }
+const { projects, compact = false } = Astro.props;
+---
+{projects.length ? (
+  <div class:list={['content-project-list', { 'archive-list': compact }]}>
+    {projects.map((project) => <ProjectCard project={project} compact={compact} />)}
+  </div>
+) : <p class="empty-projects">Nothing here yet. More work is on the way.</p>}

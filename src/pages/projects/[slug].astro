@@ -1,0 +1,43 @@
+---
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { projectPath, publishedProjects, withBase } from '../../lib/portfolio';
+export async function getStaticPaths() {
+  return (await publishedProjects()).map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+interface Props { project: CollectionEntry<'projects'>; }
+const { project } = Astro.props;
+const { data } = project;
+const { Content, headings } = await render(project);
+const sections = headings.filter(({ depth }) => depth === 2);
+const projects = await publishedProjects();
+const position = projects.findIndex(({ id }) => id === project.id);
+const next = projects[position + 1];
+---
+<PortfolioLayout title={data.title} description={data.description} image={data.image?.src} sample={data.sample}>
+  <article class="case-study">
+    <header class="case-header">
+      <a class="back-link" href={withBase('projects/')}>← Back to projects</a>
+      <p class="eyebrow">{data.category} / {data.year}{data.sample && <span class="sample-label">EXAMPLE PROJECT</span>}</p>
+      <h1>{data.title}<span class="orange">.</span></h1>
+      <p class="case-summary">{data.description}</p>
+      <dl class="project-facts">
+        <div><dt>Status</dt><dd>{data.status === 'current' ? 'In progress' : 'Completed'}</dd></div>
+        {data.role && <div><dt>My role</dt><dd>{data.role}</dd></div>}
+        {data.technologies.length > 0 && <div><dt>Built with</dt><dd>{data.technologies.join(' · ')}</dd></div>}
+      </dl>
+      {(data.demo || data.github) && <div class="project-actions">
+        {data.demo && <a class="primary-link" href={data.demo}>Live demo <span aria-hidden="true">↗</span></a>}
+        {data.github && <a class="secondary-link" href={data.github}>GitHub <span aria-hidden="true">↗</span></a>}
+      </div>}
+    </header>
+    {data.image && <div class="case-hero"><Image src={data.image} alt={data.imageAlt} widths={data.image.format === 'svg' ? undefined : [600, 1000, 1600]} sizes="(max-width: 660px) 90vw, 80vw" loading="eager" /></div>}
+    {data.sample && <p class="sample-banner">Example case study. Replace this sample with your own work.</p>}
+    <div class:list={['case-content', { 'without-toc': sections.length === 0 }]}>
+      {sections.length > 0 && <aside class="case-toc"><nav aria-label="On this page"><p class="eyebrow">ON THIS PAGE</p>{sections.map((section) => <a href={`#${section.slug}`}>{section.text}</a>)}</nav></aside>}
+      <div class="prose"><Content /></div>
+    </div>
+  </article>
+  <div class="case-bottom"><a href={withBase('projects/')}>← All projects</a>{next && <a href={projectPath(next.id)}>Next: {next.data.title} <span aria-hidden="true">↗</span></a>}</div>
+</PortfolioLayout>
