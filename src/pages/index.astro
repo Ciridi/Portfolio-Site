@@ -1,0 +1,143 @@
+---
+import { profile, links } from '../data/profile';
+const hasUnconfiguredLinks = links.some((link) => !link.href);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={profile.bio} />
+    <meta name="theme-color" content="#e9ebd9" />
+    <title>{profile.name} | Links</title>
+  </head>
+  <body>
+    <main>
+      <header>
+      <div class="avatar" aria-hidden="true">
+          <img src="/avatar.gif" alt="" />
+        </div>
+        <h1>{profile.name}<span class="period"></span></h1>
+        <p class="tagline">{profile.tagline}</p>
+        <p class="bio">{profile.bio}</p>
+      </header>
+
+      <nav aria-label="My links">
+        <ul>
+          {links.map((link, index) => (
+            <li>
+              {link.href ? (
+                <a class="link-card" href={link.href}>
+                  <span class="number" aria-hidden="true">0{index + 1}</span>
+                  <span class="label"><strong>{link.label}</strong><span>{link.caption}</span></span>
+                  <span class="arrow" aria-hidden="true">↗</span>
+                </a>
+              ) : (
+                <button class="link-card" type="button" disabled>
+                  <span class="number" aria-hidden="true">0{index + 1}</span>
+                  <span class="label"><strong>{link.label}</strong><span>{link.caption}</span></span>
+                  <span class="soon">Coming soon</span>
+                </button>
+              )}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <footer>
+        <span class="emoji" aria-hidden="true">=＾● ⋏ ●＾=</span>
+        <p>Thanks for stopping by.</p>
+        {hasUnconfiguredLinks && <p class="note">More to explore soon.</p>}
+      </footer>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(body) {
+    margin: 0;
+    color: #2a2742;
+    background: #f5f2e8;
+    font-family: 'Corbel light', Arial, sans-serif;    
+    -webkit-font-smoothing: antialiased;
+  }
+  @font-face {
+  font-family: 'Proxima Nova';
+  src: url('/fonts/ProximaNovaRegular.woff') format('woff');
+  font-weight: 800;
+  font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Proxima Nova Bold';
+    src: url('/fonts/ProximaNovaBold.woff') format('woff');
+    font-weight: 700;
+    font-display: swap;
+  }
+  @font-face {
+  font-family: 'Corbel light';
+  src: url('/fonts/corbel-light.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+  }
+  main { width: min(100% - 40px, 520px); margin: 0 auto; padding: 64px 0 30px; }
+  header { text-align: center; }
+  .eyebrow { margin: 0 0 30px; font-size: 10px; font-weight: 600; letter-spacing: 2px; }
+  .avatar {
+    position: relative; display: grid; place-items: center; width: 88px; height: 88px;
+    margin: 0 auto 22px; border: 1px solid #b4bba9; border-radius: 50%;
+    background: #e5e8d9; font-family: Georgia, serif; font-size: 29px;
+  }
+  h1 { margin: 0; font-family: 'Corbel light', sans-serif; font-size: clamp(60px, 8vw, 52px); font-weight: 800; letter-spacing: -2px; }
+  .tagline { margin: 14px 0 0; font-size: 16px; font-weight: 500; }
+  .bio { max-width: 340px; margin: 12px auto 32px; font-size: 20px; line-height: 1.65; color: #1e1a25; }
+  ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .link-card {
+    width: 100%; min-height: 86px; display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px; border: 1px solid #233c32; border-radius: 8px;
+    background: #2a2742; color: #f9f6eb; font: inherit; text-decoration: none;
+    text-align: left; transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+  }
+  .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 30%;
+  object-fit: cover;
+  }
+  a.link-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px #233c3218;
+}
+
+  li:nth-child(1) a.link-card:hover { background: #3db6b6; } /* Portfolio */
+  li:nth-child(2) a.link-card:hover { background: #0b5c99; } /* Linkedin */
+  li:nth-child(3) a.link-card:hover { background: #111111; } /* Github */
+  li:nth-child(4) a.link-card:hover { background: #DD2A7B ; } /* Instagram */
+  li:nth-child(5) a.link-card:hover { background: #ce7a21; } /* Email me */
+
+  a.link-card:focus-visible { outline: 3px solid #a53d10; outline-offset: 4px; }
+  button.link-card:disabled { opacity: 1; cursor: default; }
+  .number { font-size: 11px; color: #c7cdbd; font-variant-numeric: tabular-nums; }
+  .label { display: grid; gap: 5px; }
+  .label strong { font-size: 18px; font-weight: 500; }
+  .label > span { font-size: 12px; color: #d1d7cb; }
+  .arrow { margin-left: auto; font-size: 25px; }
+  .soon { margin-left: auto; font-size: 10px; color: #d1d7cb; white-space: nowrap; }
+  footer { margin-top: 30px; text-align: center; }
+  .emoji { color: #747586; font-size: 25px; }
+  footer p { margin: 8px 0 0; font-size: 12px; color: #62675e; }
+  footer .note { font-size: 11px; }
+  @media (max-width: 420px) {
+    main { padding-top: 36px; }
+    .eyebrow { font-size: 9px; letter-spacing: 1.3px; }
+    .link-card { gap: 12px; padding: 18px 16px; }
+    .label > span { font-size: 11px; }
+    .soon { font-size: 9px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .link-card { transition: none; }
+    a.link-card:hover { transform: none; }
+  }
+</style>
